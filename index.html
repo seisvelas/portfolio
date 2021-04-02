@@ -3,24 +3,19 @@
 <html>
 
 <head>
-  <title>Toy Chest</title>
+  <title>Portfolio</title>
   <link rel="stylesheet" href="css/chessboard-0.3.0.min.css">
   <link rel="stylesheet"
       href="css/prism.css">
 <script src="js/prism.js"></script>
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-  <script src="js/chessboard-0.3.0.min.js"></script>
-  <script src="js/eightQueensSolutions.js"></script>
-  <script src="js/clockAngle.js"></script>
   <style>
-    #fractal {margin: 0; padding: 0;}
-/*To remove the scrollers*/
-#fractal {display: block;}
-    body {
-      font-size: 8
-    }
-  code {
-    letter-spacing: normal;
+body {
+  font-size: 8;
+  margin-bottom: 70px;
+}
+code {
+  letter-spacing: normal;
 }
 
 .main {
@@ -31,507 +26,68 @@
     align-items: middle;
 }
 
-.clockbox,
-#clock {
-    width: 100%;
-}
-
-/* Clock styles */
-.circle {
-    fill: none;
-    stroke: #000;
-    stroke-width: 9;
-    stroke-miterlimit: 10;
-}
-
-.mid-circle {
-    fill: #000;
-}
-.hour-marks {
-    fill: none;
-    stroke: #000;
-    stroke-width: 9;
-    stroke-miterlimit: 10;
-}
-
-.codey {
-  margin-top: 30px;
-}
-
-.hour-arm {
-    fill: none;
-    stroke: #000;
-    stroke-width: 17;
-    stroke-miterlimit: 10;
-}
-
-.minute-arm {
-    fill: none;
-    stroke: #000;
-    stroke-width: 11;
-    stroke-miterlimit: 10;
-}
-
-.second-arm {
-    fill: none;
-    stroke: #000;
-    stroke-width: 4;
-    stroke-miterlimit: 10;
-}
-
-/* Transparent box ensuring arms center properly. */
-.sizing-box {
-    fill: none;
-}
-
-/* Make all arms rotate around the same center point. */
-/* Optional: Use transition for animation. */
-#hour,
-#minute,
-#second {
-    transform-origin: 300px 300px;
-    /*transition: transform .5s ease-in-out;*/
-}
-    a {
+a {
   color: black;
 }
-    #anchors {
-      color: black;
-      font-size: 20px;
-      padding-left: 5%;
-      line-height: 30px;
-    }
+#anchors {
+  color: black;
+  font-size: 20px;
+  padding-left: 5%;
+  line-height: 30px;
+}
   </style>
 </head>
 
 <body>
   <div style="width:500px;margin:auto;letter-spacing: 0.1em;">
     <div style="font-size: 500%">~</div>
-    A gallery of fun toy problems I did at Holacode <p>
-      Beneath each snippet is a link to a gist containing my other solutions<p>
-    <div id="anchors"><a href="#queens">8 Queens</a><br>
-    <a href="#clockhands">Clock Hands</a><br>
-    <a href="#language">Make A Language</a><br>
-    <a href="#fractalFib">Fractal Fibonacci Tree</a><br>
+      A gallery of vulnerabilities, patches, and other contributions I've made <p>
+      Or, the cumulative sum of my professional existence <p>
+    <div id="anchors">
+      <a href="#vulns">Vulnerabilities</a><br>
+      <a href="#open">Open Source</a><br>
+      <a href="#curios">Curios</a><br>
     </div>
     <p>
-    Nota Bene: Code here is factored for fun and beauty. Best practices are cast to the wind with gleeful abandon.
+    The projects below can be summed in this philosophy: code with gleeful abandon in your free time and with brutal discipline professionally
     
     <p>
     </p>
     <hr>
-    <h1 id="queens">8 Queens</h1>
+    <h1 id="vulns">Vulnerabilities</h1>
     <p>
       <div width="500px; overflow:hidden">
-      Given an 8 x 8 board, find all the ways you can  
-      place 8 queens on the board 
-      such that none of  
-      them are threatened.
-
+        <b>👔 FlowCrypt</b><br>Most of my disclosed vulnerabilities are from my current workplace, FlowCrypt.
+      All of the bugs on <a href="https://flowcrypt.com/docs/technical/fixed-vulnerabilities.html">FlowCrypt's Fixed Vulnerabilities docs</a> that mention
+      Alex are referring to me.<p>
+        <b>λ Racket Stories</b><br>I found an XSS vulnerability on racket-stories.com and submitted <a href="https://github.com/soegaard/racket-stories/pull/13">this patch</a>.
+      </p>
+      <p><b>⚔ Codewars</b><br>Codewars includes me in their <a href="https://github.com/Codewars/codewars.com/security/policy">Security Acknowledgements</a>
+      for reporting multiple stored XSS vulnerabilities.</p>
+      <p><b>💰 GitHub</b><br>GitHub awarded me <a href="https://github.com/Codewars/codewars.com/security/policy">$600</a>
+        after I reported a flaw in their security notification alerts</p>
     </p>
-    <div id="board" style="width: 500px;margin-top: 30px;margin-bottom: 30px"></div><p>
-    Instead of the conventional backtracking approach, 
-    this is a pure, functional implementation with no global state.
-    <div class="codey"></div><pre><code class="language-javascript">var {range} = require('range')
-          
-function isThreatened(board, pos) {
-  return board.includes(pos) ||
-         board.filter((e, i, a) =>
-           a.length - i === Math.abs(e - pos)
-         ).length
-}
-        
-function nqueens(n, board=[]) {
-  let moves = range(n).filter(e=>
-    !isThreatened(board, e)
-  )
-          
-  return board.length === n - 1
-    ? moves
-    : moves.map((m, i, a)=>
-        nqueens(n, a.concat([m])).map(sol=>
-          [m].concat(sol)
-        )
-      ).reduce((acc, cur) => acc.concat(cur), []);
-}
-        
-  console.log(nqueens(8))  
-    </code></pre></div>
-    Other versions: <a href="https://gist.github.com/seisvelas/944e873f50abe89498b93db62278d2dd">seisvelas@gist.github/nqueens</a>
-<div style="margin-top:50px">
 <hr>
-    <h1 id="clockhands">Clock Hands</h1>
-    Given a time, find the inner angle between the second
-    and hour hands at that time.
-    <div class="clockbox" style="margin-bottom: 0%">
-      <div style="text-align: center; margin-bottom: 0%" id="time"></div>
-      <svg id="clock" xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 600 600">
-          <g id="face">
-              <circle class="circle" cx="300" cy="300" r="253.9"/>
-              <path class="hour-marks" d="M300.5 94V61M506 300.5h32M300.5 506v33M94 300.5H60M411.3 107.8l7.9-13.8M493 190.2l13-7.4M492.1 411.4l16.5 9.5M411 492.3l8.9 15.3M189 492.3l-9.2 15.9M107.7 411L93 419.5M107.5 189.3l-17.1-9.9M188.1 108.2l-9-15.6"/>
-              <circle class="mid-circle" cx="300" cy="300" r="16.2"/>
-          </g>
-          <g id="hour">
-              <path class="hour-arm" d="M300.5 298V142"/>
-              <circle class="sizing-box" cx="300" cy="300" r="253.9"/>
-          </g>
-          <g id="minute">
-              <path class="minute-arm" d="M300.5 298V67"/>
-              <circle class="sizing-box" cx="300" cy="300" r="253.9"/>
-          </g>
-          <g id="second">
-              <path class="second-arm" d="M300.5 350V55"/>
-              <circle class="sizing-box" cx="300" cy="300" r="253.9"/>
-          </g>
-      </svg>
-      <center><span id="clock-angle" style="margin-top: 0%"></span></center>
+    <h1 id="open">Open Source</h1>
+    <p><b>🧅 Tor</b><br>My <a href="https://github.com/seisvelas/torsocks/commit/776acaa35008075887256ad2578b243209cb7893">patch</a> made Torsocks compatible with Mutt and numerous other applications </p>
+    <p><b>🌶︎ OpenPGP Spanish Translation Team</b><br>I help translate open source cryptography tools into Spanish as part of the openpgp.org translation team</p>
+    <p><b>🛡️ libhomograph</b><br>I am the maintainer of <a href="https://github.com/FlowCrypt/idn-homographs-database">libhomograph</a>, a library for defending against Internationalized Domain Name homograph attacks</p>
+    <p><b>🧹 S3 Exif Cleaner</b><br>This <a href="https://github.com/seisvelas/S3-Exif-Cleaner">simple tool</a> iterates through every image in an S3 bucket and cleanses EXIF data</p>
+    <p><b>💌 GistBlog</b><br>React component to use GitHub Gists as a free, headless CMS for blogs on static
+    hosts like GitHub pages. <a href="https://www.npmjs.com/package/@xandrev/gistblog">NPM package</a> and <a href="https://seisvelas.github.io/">live example</a>.</p>
+    <p><b>🍺 SAN Scanner</b><br>A Burp Suite app<a href="https://portswigger.net/bappstore/25cf44e09aaf4acc9b5f49373c90199a">available in the BApp store</a> that passively scans for Subject Alternate Names for pentesters and CTF players.</p>
 
-  </div><!-- .clockbox -->
-  </div>
-  Lorenzo, one of the volunteer mentors at holacode,
-  taught us this problem. He said it was given to him during his
-  interview at Uber. <p>
-    Below is my solution in Elixir. The Scheme version uses a macro so you can enter the time as-is. So <span class="hour"></span>:<span class="minute"></span>
-    instead of the string literal <font color="green">"<span class="hour"></span>:<span class="minute"></span>"</font>
-    (like my Python version) or three integers like the version below.
-  </p>
-  <div class="codey">
-      <pre><code class="language-python">defmodule ClockAngle do
-  def pos(hour, minute) do
-    5 * (rem(hour, 12) + minute / 60)
-  end
-  def angle(hour, minute, second) do
-    hour_pos = pos(hour, minute)
-    angle = abs(6 * (second - hour_pos))
-    inner_angle = min(angle, 360 - angle)
-
-    inner_angle
-  end
-end
-
-IO.puts ClockAngle.angle(2, 20, 20)
-</code></pre>
-Other versions: <a href="https://gist.github.com/seisvelas/43a62d8e5f392067e98895515e9d9438">seisvelas@gist.github/clock</a>
-  </div>
-
-  
 <div style="margin-top:50px">
     <hr>
   </div>
-<h1 id="language">Make A Language</h1>
-I made up a language called Rosario and implemented the interpreter in Lisp. The syntax is akin to an x86 assembly, with each line representing
-  a discrete instruction and 'loops' simulated with label/goto spaghetti. <p>
-  
-  Here's me running a Rosario application that displays the nth fibonacci number:<p/>
-  
-  <center><img style="width:440px" src="img/terminal.gif"></img><p /></center>
-  
-  And here's the source code of fib.rose:
+<h1 id="curios">Curios</h1>
+<p><b>🥊 Code Puzzles</b><br>I love code puzzles. I'm <a href="https://www.codewars.com/users/seisvelas">@seisvelas</a> on Codewars, and have a <a href="https://seisvelas.github.io/gallery/">Toy Problem Gallery</a> from when I was learning frontend.</p>
+<p><b>🧙 Teaching</b><br>I mentor other CTF players on my <a href="https://app.hackthebox.eu/profile/241428">HackTheBox team</a>, and enjoy providing in-depth answers via my <a href="https://stackoverflow.com/users/407861/alex-v">StackOverflow profile</a></p>
+<p><b>🏛️ Latin</b><br>An avid medievalist, I'm proud to host and administer the only Mastodon instance serving the medieval and classical Latin communities, latin.masto.host</p>
 
-  
-  <div class="codey">
-      <pre><code class="language-lisp">// fib.rose
-// Displays the nth fibonacci number
-
-<- n 8
-
-<- a 0
-<- b 1
-
-// asm style loop (label/condition/goto)
-label @begin
-  <- tmp a
-  <- a b
-  += b tmp
-  += n -1
-  != n 0
-goto @begin
-
-// n is 8, so this will display 21
-hi a
-</code></pre></p>
-Compiler Source: <a href="https://github.com/seisvelas/rosario">seisvelas@github/rosario</a>
-</div><p>
-This was my first, small project with <a href="https://beautifulracket.com/appendix/why-lop-why-racket.html">Language Oriented Programming</a> but
-I'd like to create something less trivial. Racket is so powerful for language creation, it feels wrong NOT to, even just for fun.
-  <p />
-  <div style="margin-top: 50px"></div>
-  <hr>
-  <h1 id="fractalFib">Fractal Fibonacci Tree</h1>
-  Create a binary tree with a base value of n, such that each branch equals n-1 and n-2. Stop branching when n equals 1 or 0.
-  <p>The sum of the terminal leaves is the nth Fibonacci number.</p>
-
-  <canvas style="width:550px" id="fractal"></canvas>
- <div style="width:30%;margin: 0 auto;">
-  
-  <table> <tr> <td style="text-align: right">n = </td> <td><span id="n"></span></td></tr>
-    <tr> <td>f(n) = </td> <td><span id="fn">...</span></td></tr>
-  
-</table> 
 </div>
-<p></p> 
-	
-	Before FizBuzz stormed HR departments over two decades ago (and when C could still
-	be called a lingua franca), "reverse a linked list" was the programming interview question du jour.
-	C and Lisp are the only languages in which linked lists feel natural to me, even though the same abstraction is
-	simple enough with object references in most other languages.
-	
-	<div class="codey">
-
-  <pre><code class="language-c">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-    
-struct fib_node {
-  int n;
-  struct fib_node *left, *right;
-};
-    
-struct fib_node* fib(int n) {
-  struct fib_node *node;
-
-  node = malloc(sizeof(struct fib_node));
-  node->n = n;
-      
-  if (n && (n - 1)) {
-    node->left  = fib(n-1);
-    node->right = fib(n-2);
-  }
-    
-  return node;               
-}
-    
-int count_leaves(struct fib_node *node) {
-    if (node->left && node->right) {
-        return count_leaves(node->left) + 
-               count_leaves(node->right);
-    }
-    return node->n;
-}
-    
-void main(void) {
-  // displays 13, the 7th fib number
-  printf("%d\n", count_leaves(fib(7)));
-}
-</code></pre>
-Other approaches: <a href="https://gist.github.com/seisvelas/67fe070e9fe3ed731c2abb67b388992f">seisvelas@gist.github/fib</a>
-</div><p>
-  </div>
   
 </div>
-  <script>
-    window.onload = function(){
-	var canvas = document.getElementById("fractal");
-	var ctx = canvas.getContext("2d");
-	//Lets resize the canvas to occupy the full page
-	var W = window.innerWidth;
-	var H = window.innerHeight/1.5;
-	canvas.width = W;
-	canvas.height = H;
-	
-	//Some variables
-	var length, divergence, reduction, line_width, start_points = [];
-	
-	init();
-	function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-	function init()
-	{
-        $("#n").text("");
-        $("#fn").text("...");
-        var n = getRandomInt(8, 17)
-        $("#n").text(n + "")
-
-		//filling the canvas white
-		ctx.fillStyle = "white";
-		ctx.fillRect(0, 0, W, H);
-		
-		//Lets draw the trunk of the tree
-		//lets randomise the variables
-		//length of the trunk - 100-150
-		length = 100;
-		//angle at which branches will diverge - 10-60
-		divergence = 25 + Math.round(Math.random()*21);
-		//Every branch will be 0.75times of the previous one - 0.5-0.75
-		//with 2 decimal points
-		reduction = .8;
-		//width of the branch/trunk
-		line_width = 10;
-		
-		//This is the end point of the trunk, from where branches will diverge
-		var trunk = {x: W/2, y: length+50, angle: 90};
-		//It becomes the start point for branches
-		start_points = []; //empty the start points on every init();
-		start_points.push(trunk);
-		
-		//Y coordinates go positive downwards, hence they are inverted by deducting it
-		//from the canvas height = H
-		ctx.beginPath();
-		ctx.moveTo(trunk.x, H-50);
-		ctx.lineTo(trunk.x, H-trunk.y);
-		ctx.strokeStyle = "brown";
-		ctx.lineWidth = line_width;
-		ctx.stroke();
-		
-		branches(n, 0,1, n);
-	}
-	
-	//Lets draw the branches now
-	function branches(n, a, b, original_n)
-	{
-		//reducing line_width and length
-		length = length * reduction;
-		line_width = line_width * reduction;
-		ctx.lineWidth = line_width;
-		
-		var new_start_points = [];
-		ctx.beginPath();
-		for(var i = 0; i < start_points.length; i++)
-		{
-			var sp = start_points[i];
-			//2 branches will come out of every start point. Hence there will be
-			//2 end points. There is a difference in the divergence.
-			var ep1 = get_endpoint(sp.x, sp.y, sp.angle+divergence, length);
-			var ep2 = get_endpoint(sp.x, sp.y, sp.angle-divergence, length);
-			
-			//drawing the branches now
-			ctx.moveTo(sp.x, H-sp.y);
-			ctx.lineTo(ep1.x, H-ep1.y);
-			ctx.moveTo(sp.x, H-sp.y);
-			ctx.lineTo(ep2.x, H-ep2.y);
-			
-			//Time to make this function recursive to draw more branches
-			ep1.angle = sp.angle+divergence;
-			ep2.angle = sp.angle-divergence;
-			
-			new_start_points.push(ep1);
-			new_start_points.push(ep2);
-		}
-		//Lets add some more color
-		if(length < 10) ctx.strokeStyle = "green";
-		else ctx.strokeStyle = "brown";
-		ctx.stroke();
-		start_points = new_start_points;
-		//recursive call - only if length is more than 2.
-		//Else it will fall in an long loop
-		if(n > 0) {
-            setTimeout(()=>branches(n-1,b, a+b, original_n), 50);
-        }
-        else {
-          $("#fn").text(a + "")
-        setTimeout(init, 2000);
-        }
-	}
-	
-	function get_endpoint(x, y, a, length)
-	{
-		//This function will calculate the end points based on simple vectors
-		//http://physics.about.com/od/mathematics/a/VectorMath.htm
-		//You can read about basic vectors from this link
-		var epx = x + length * Math.cos(a*Math.PI/180);
-		var epy = y + length * Math.sin(a*Math.PI/180);
-		return {x: epx, y: epy};
-	}
-	
-	
-	
-}
-     var date = new Date();
- let hro = date.getHours();
- hro= hro > 12 ? hro - 12 : hro;
- let mino = date.getMinutes();
- let seco = date.getSeconds()
-
-var doc = document.getElementsByTagName('code')[1]
- var doc_code = document.getElementsByTagName('code')[1].innerHTML.split("\n")
- console.log(doc_code)
- var new_html = []
-for (let i = 0; i < doc_code.length; i++) {
-  if (doc_code[i].includes("puts")) {
-    new_html.push(`IO.puts ClockAngle.angle(${hro}, ${mino}, ${seco})`)
-  } else {
-    new_html.push(doc_code[i])
-  }
-}
-
-doc.innerHTML = new_html.join('\n')
-    // 8 queens
-    function draw(boardViz, board) {
-      boardViz.position(board.map((e, i) => {
-        return (e === 0) ? "" : e;
-      }).join("q/") + "q")
-    }
-    var boardViz = ChessBoard('board', '');
-    i = 0;
-    setInterval(function () {
-      draw(boardViz, solutions[i++ % solutions.length]);
-    }, 1000);
-    const HOURHAND = document.querySelector('#hour');
-const MINUTEHAND = document.querySelector('#minute');
-const SECONDHAND = document.querySelector('#second');
-
-var date = new Date();
- let hr = date.getHours();
- let min = date.getMinutes();
- let sec = date.getSeconds();
-
- var lol = document.getElementsByClassName('hour')
- for (let i = 0; i < lol.length; i++) {
-   lol[i].innerHTML = hr>12?hr%12:hr
- }
- lol = document.getElementsByClassName('minute')
- for (let i = 0; i < lol.length; i++) {
-   lol[i].innerHTML = min < 10 ? "0"+min : min
- }
-lol = document.getElementsByClassName('second')
- for (let i = 0; i < lol.length; i++) {
-   lol[i].innerHTML = sec < 10 ? "0"+sec : sec
- }
- let hrPosition = hr*360/12 + ((min * 360/60)/12) ;
-let minPosition = (min * 360/60) + (sec* 360/60)/60;
-let secPosition = sec * 360/60;
-HOURHAND.style.transform = 'rotate(' + hrPosition + 'deg)';
-MINUTEHAND.style.transform = 'rotate(' + minPosition + 'deg)';
-SECONDHAND.style.transform = 'rotate(' + secPosition + 'deg)';
-function run_the_clock(){
-  
-  
- var date = new Date();
- let hr = date.getHours();
- hr = hr > 12 ? hr - 12 : hr;
- let min = date.getMinutes();
- let sec = date.getSeconds()
-
-
-
- let e = document.querySelector("#clock-angle")
- e.innerHTML = `<h1>${parseInt(clockAngle(hr, min, sec))}°</h1>`
- let t = document.querySelector("#time")
-t.innerHTML = `<h1>${hr}:${min<10?"0"+min:min}:${sec<10?"0"+sec:sec}</h1>`
- let hrPosition = hr*360/12 + ((min * 360/60)/12) ;
- let minPosition = (min * 360/60) + (sec* 360/60)/60;
- let secPosition = sec * 360/60;
-
- //Then we need to apply these numbers as degrees in the inline   styles for transform on each of the objects.
- HOURHAND.style.transform = 'rotate(' + hrPosition + 'deg)';
- MINUTEHAND.style.transform = 'rotate(' + minPosition + 'deg)';
- SECONDHAND.style.transform = 'rotate(' + secPosition + 'deg)';
-
- }
- var interval = setInterval(run_the_clock, 1000);
-
-
-</script>
-
-    <footer style="text-align:center;height:80px;color:white;background-color: #000; width:100%;margin-top:80px">
-<strong>All Code
-        <img style="vertical-align:middle;height:80px" src="img/roses.jpg" alt="Bread and Roses">
-      Public Domain
-  </strong>
-    </footer>
-
 </body>
 
 </html>
